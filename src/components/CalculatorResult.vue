@@ -5,7 +5,8 @@
       <span>{{ resultCounter.value }}</span><br />
       <span>{{ operation.withSpaces }}</span><br />
       <button @click="causeTypeError">Try to set string</button><br />
-      <button @click="causePropError">Try to set another property</button>
+      <button @click="causePropError">Try to set another property</button><br />
+      <span>{{ symbolsWithOperation.value }}</span>
     </div>
   </div>
 </template>
@@ -17,7 +18,7 @@ export default {
   name: 'CalculatorResult',
   data() {
     return {
-      ...calculatorData(['operation', 'resultCounter']),
+      ...calculatorData(['operation', 'resultCounter', 'symbolsWithOperation']),
     };
   },
   methods: {
