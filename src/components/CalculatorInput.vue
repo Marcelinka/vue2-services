@@ -1,7 +1,7 @@
 <template>
   <div>
     <input :value="operation.value" disabled />
-    <button @click="test">Ошибка</button>
+    <button @click="test">Try to set readonly property</button>
   </div>
 </template>
 

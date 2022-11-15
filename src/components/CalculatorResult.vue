@@ -1,14 +1,36 @@
 <template>
-  <button @click="calculateResult">=</button>
+  <div>
+    <button @click="calculateResultAndAddCounter">=</button>
+    <div>
+      <span>{{ resultCounter.value }}</span><br />
+      <button @click="causeTypeError">Try to set string</button><br />
+      <button @click="causePropError">Try to set another property</button>
+    </div>
+  </div>
 </template>
 
 <script>
-import { calculatorMethods } from '../services/Calculator.js';
+import { calculatorData, calculatorMethods } from '../services/Calculator.js';
 
 export default {
   name: 'CalculatorResult',
+  data() {
+    return {
+      ...calculatorData(['resultCounter']),
+    };
+  },
   methods: {
     ...calculatorMethods(['calculateResult']),
+    calculateResultAndAddCounter() {
+      this.calculateResult();
+      this.resultCounter.value += 1;
+    },
+    causeTypeError() {
+      this.resultCounter.value = 'test';
+    },
+    causePropError() {
+      this.resultCounter.test = 0;
+    },
   },
 };
 </script>

@@ -33,22 +33,41 @@ class Calculator {
      * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy
      * 
      * Именно с помощью перехватывания `set`, можно либо запретить изменение, либо отвалидировать
-     * В данном случае ф-я `set` возвращает `false`, что запрещает любое изменение
+     * В данном случае ф-я `set` выкидывает exception с описанием ошибки, но также можно
+     * просто вернуть `false` из функции (также будет ошибка, просто без толкового описания)
      */
-    return new Proxy(this._operation, { set: () => false });
+    return new Proxy(this._operation, {
+      set() {
+        throw new Error('This property is read-only')
+      }
+    });
+  }
 
-    /**
-     * Так мог бы выглядеть валидатор для значения
-     */
-    // return new Proxy(this._operation, {
-    //   set(val) {
-    //     if (validator(val)) {
-    //       return true;
-    //     }
+  // Публичное свойство, подразумевающее, что его будут изменять снаружи
+  _resultCounter = {
+    value: 0,
+  }
 
-    //     return false;
-    //   }
-    // });
+  // Алиас для публичного свойства, чтобы добавить валидатор
+  get resultCounter() {
+    return new Proxy(this._resultCounter, {
+      set(obj, prop, value) {
+        // Запрещаем добавление новых полей
+        if (prop !== 'value') {
+          throw new Error('Only accesible property is "value"');
+        }
+
+        // Запрещаем записывать НЕ число
+        if (!Number.isInteger(value)) {
+          throw new TypeError('Value must be integer');
+        }
+
+        // Проводим операцию присваивания
+        obj[prop] = value;
+        // Сигнализируем, что ошибки не возникло
+        return true;
+      }
+    })
   }
 
   /**
@@ -90,7 +109,7 @@ const getInstance = () => {
  * 
  * Позволяет ограничить свойства, не давая читать любые данные
  */
-const PUBLIC_PROPERTY_NAMES = ['operation'];
+const PUBLIC_PROPERTY_NAMES = ['operation', 'resultCounter'];
 /**
  * Специальная функция, позволяющая записать данные для чтения
  * в блок `data` в компоненте
