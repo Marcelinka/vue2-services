@@ -7,23 +7,27 @@
     >
       {{ s }}
     </button>
+    <button @click="() => addSymbolToButtons('*')">Add button</button><br/>
+    <button @click="addSymbol">Add symbol directly</button>
+    <button @click="setNewSymbols">Recreate buttons</button>
   </div>
 </template>
 
 <script>
-import { calculatorMethods } from '../services/Calculator.js';
-
-const SYMBOLS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '-'];
+import { calculatorData, calculatorMethods } from '../services/Calculator.js';
 
 export default {
   name: 'CalculatorButton',
   data() {
     return {
-      symbols: SYMBOLS,
+      ...calculatorData(['symbols']),
     }
   },
   methods: {
-    ...calculatorMethods(['addSymbolToOperation']),
+    ...calculatorMethods(['addSymbolToOperation', 'addSymbolToButtons', 'setNewSymbols']),
+    addSymbol() {
+      this.symbols.push('*');
+    }
   },
 };
 </script>
