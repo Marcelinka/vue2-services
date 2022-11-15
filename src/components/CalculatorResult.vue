@@ -3,6 +3,7 @@
     <button @click="calculateResultAndAddCounter">=</button>
     <div>
       <span>{{ resultCounter.value }}</span><br />
+      <span>{{ operation.withSpaces }}</span><br />
       <button @click="causeTypeError">Try to set string</button><br />
       <button @click="causePropError">Try to set another property</button>
     </div>
@@ -16,7 +17,7 @@ export default {
   name: 'CalculatorResult',
   data() {
     return {
-      ...calculatorData(['resultCounter']),
+      ...calculatorData(['operation', 'resultCounter']),
     };
   },
   methods: {

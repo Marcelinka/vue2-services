@@ -51,6 +51,36 @@ class Calculator {
    */
   _operation = {
     value: '',
+    /**
+     * Это аналог `computed` для одного свойства, либо для нескольких,
+     * если они объединены в один объект
+     * 
+     * Для него нельзя создавать алиас, по типу
+     * this.someOtherProp = this.operation.withSpaces
+     * иначе оно не будет работать
+     * 
+     * Если вы не понимаете, как это работает, то советую прочитать книгу про контекст
+     * @see https://kbpsystem777.github.io/You-Dont-Know-JS/this&object-prototypes/ch1.html
+     * 
+     * @example
+     * <template>
+     *  <div>{{ operation.withSpaces }}</div>
+     * </template>
+     * <script>
+     * import ..
+     * export default {
+     *  ..
+     *  data() {
+     *    ...calculatorData(['operation']),
+     *    ..
+     *  },
+     *  ..
+     * }
+     * </script>
+     */
+    get withSpaces() {
+      return String(this.value).replace(/\+/g, ' + ');
+    }
   };
 
   /**
