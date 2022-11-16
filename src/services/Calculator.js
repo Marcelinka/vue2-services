@@ -1,5 +1,18 @@
 class Calculator {
   /**
+   * Общий инстанс класса, для сохранения экземпляра между компонентами
+   * 
+   * @type {Calculator}
+   */
+  static instance = null;
+  /**
+   * Закрытый инстанс класса, который можно получить по ключу
+   * 
+   * @type {[key]: Calculator}
+   */
+  static scopedInstances = {};
+
+  /**
    * Приватное свойство
    * Не подразумевается, что его нужно будет читать извне
    */
@@ -14,6 +27,17 @@ class Calculator {
    * Я вдохновлялась функцией `ref` из vue 3
    * 
    * @see https://vuejs.org/api/reactivity-core.html#ref
+   * 
+   * Примитив внутри класса по сути можно хранить в оригинальном виде, лишь
+   * на выход в геттере отдавать объект
+   * 
+   * @example
+   * // внутри класса работаем как с обычной строкой
+   * _someString: '',
+   * // для компонента отдаем объект с `value`
+   * get someString() {
+   *  return { value: this._someString };
+   * }
    */
   _operation = {
     value: '',
@@ -205,18 +229,24 @@ class Calculator {
   }
 };
 
-let instance;
-
 /**
  * Это простенький DI, позволяющий получать один и тот же экземпляр,
  * но при этом создавать его только тогда, когда он действительно нужен
  */
-const getInstance = () => {
-  if (!instance) {
-    instance = new Calculator();
+const getInstance = (key = '') => {
+  if (key) {
+    if (!Calculator.scopedInstances[key]) {
+      Calculator.scopedInstances[key] = new Calculator();
+    }
+
+    return Calculator.scopedInstances[key];
   }
 
-  return instance;
+  if (!Calculator.instance) {
+    Calculator.instance = new Calculator();
+  }
+
+  return Calculator.instance;
 };
 
 /**
@@ -235,6 +265,18 @@ const PUBLIC_PROPERTY_NAMES = [
   'symbolsWithOperation',
 ];
 /**
+ * @typedef {string} NewPropName
+ */
+/**
+ * @typedef {string} PropName
+ */
+/**
+ * @typedef {{[NewPropName]: PropName}} PropNamesWithAliases
+ */
+/**
+ * @typedef {PropName[] | PropNamesWithAliases} PropNames
+ */
+/**
  * Специальная функция, позволяющая записать данные для чтения
  * в блок `data` в компоненте
  * 
@@ -243,24 +285,41 @@ const PUBLIC_PROPERTY_NAMES = [
  * ей в секции `template` или использовать другую функциональность (e.g watchers/computed)
  * ее нужно встраивать в секцию `data`
  * 
- * @param {string[]} propNames - свойства, которые вы хотите получите
- * @returns { {[property]: unknown} } - отдает объект со всеми запрашиваемыми свойствами
+ * @param {string | PropNames} keyOrPropNames - ключ ИЛИ свойства, которые вы хотите получите
+ * @param {PropNames} [propNames] - если передается ключ, то вторым параметром передаем свойства
+ * @returns { {[PropName]: any} } - отдает объект со всеми запрашиваемыми свойствами
  * 
  * @example
  * data() {
  *  return {
  *    ...calculatorData(['operation']),
+ *    ...calculatorData('someKey', { newOp: 'operation' })
  *  };
  * }
  */
-const calculatorData = (propNames) => {
-  const _ = getInstance();
+const calculatorData = (keyOrPropNames, propNames) => {
+  let instance = null;
+
+  if (typeof keyOrPropNames === 'string') {
+    instance = getInstance(keyOrPropNames);
+  } else {
+    propNames = keyOrPropNames;
+    instance = getInstance();
+  }
+
+  if (!Array.isArray(propNames)) {
+    propNames = Object.entries(propNames);
+  }
+
   const res = { };
   
   for (const prop of propNames) {
+    let propAlias = prop instanceof Array ? prop[0] : prop;
+    let propName = prop instanceof Array ? prop[1] : prop;
+    
     // Если не нужна проверка доступных свойств, этот `if` не нужен
-    if (PUBLIC_PROPERTY_NAMES.includes(prop)) {
-      res[prop] = _[prop];
+    if (PUBLIC_PROPERTY_NAMES.includes(propName)) {
+      res[propAlias] = instance[propName];
     }
   }
 
@@ -277,27 +336,56 @@ const PUBLIC_METHODS_NAMES = [
   'setNewSymbols',
 ];
 /**
+ * @typedef {string} NewMethodName
+ */
+/**
+ * @typedef {string} MethodName
+ */
+/**
+ * @typedef {{[NewMethodName]: MethodName}} MethodsNamesWithAliases
+ */
+/**
+ * @typedef {MethodName[] | MethodsNamesWithAliases} MethodsNames
+ */
+/**
  * Специальная функция, позволяющая получить методы сервиса
  * 
  * Также как и в предыдущем примере, она также будет работать и без встраивания в
  * компонент в секцию `methods`, но если вы хотите их использовать в `template`,
  * то без встраивания не обойтись
  * 
- * @param {string[]} methodsNames - методы, которые вы хотите получить
- * @returns { {[methodName]: Function} }
+ * @param {string | MethodsNames} keyOrMethodsNames - ключ ИЛИ методы, которые вы хотите получить
+ * @param {MethodsNames} [methodsNames] - если передали ключ, то вторым параметром передаем методы
+ * @returns { {[MethodName]: Function} }
  * 
  * @example
  * methods: {
  *  ...calculatorMethods(['calculateResult']),
+ *  ...calculatorMethods('key', { newCalc: 'calculateResult' })
  * },
  */
-const calculatorMethods = (methodsNames) => {
-  const _ = getInstance();
+const calculatorMethods = (keyOrMethodsNames, methodsNames) => {
+  let instance = null;
+
+  if (typeof keyOrMethodsNames === 'string') {
+    instance = getInstance(keyOrMethodsNames);
+  } else {
+    methodsNames = keyOrMethodsNames;
+    instance = getInstance();
+  }
+
+  if (!Array.isArray(methodsNames)) {
+    methodsNames = Object.entries(methodsNames);
+  }
+
   const res = { };
 
   for (const method of methodsNames) {
-    if (PUBLIC_METHODS_NAMES.includes(method)) {
-      res[method] = _[method].bind(_);
+    let methodAlias = method instanceof Array ? method[0] : method;
+    let methodName = method instanceof Array ? method[1] : method;
+
+    if (PUBLIC_METHODS_NAMES.includes(methodName)) {
+      res[methodAlias] = instance[methodName].bind(instance);
     }
   }
   

@@ -2,7 +2,8 @@
   <div id="app">
     <calculator-input />
     <calculator-buttons />
-    <calculator-result />
+    <calculator-result /><br /><br />
+    <calculator-2 />
   </div>
 </template>
 
@@ -10,6 +11,7 @@
 import CalculatorInput from './components/CalculatorInput.vue';
 import CalculatorButtons from './components/CalculatorButtons.vue';
 import CalculatorResult from './components/CalculatorResult.vue';
+import Calculator2 from './components/Calculator2.vue';
 
 export default {
   name: 'App',
@@ -17,6 +19,7 @@ export default {
     CalculatorInput,
     CalculatorButtons,
     CalculatorResult,
+    Calculator2,
   }
 }
 </script>
