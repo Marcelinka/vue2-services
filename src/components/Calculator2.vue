@@ -11,7 +11,7 @@
 <script>
 import { calculatorData, calculatorMethods } from '../services/Calculator';
 
-const KEY = 'test_instance';
+export const KEY = 'test_instance';
 
 export default {
   name: 'Calculator2',
