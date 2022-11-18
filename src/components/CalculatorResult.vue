@@ -19,10 +19,10 @@ export default {
   data() {
     return {
       ...calculatorData(['operation', 'resultCounter', 'symbolsWithOperation']),
+      ...calculatorMethods(['calculateResult']),
     };
   },
   methods: {
-    ...calculatorMethods(['calculateResult']),
     calculateResultAndAddCounter() {
       this.calculateResult();
       this.resultCounter.value += 1;

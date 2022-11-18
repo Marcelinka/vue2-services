@@ -350,18 +350,26 @@ const PUBLIC_METHODS_NAMES = [
 /**
  * Специальная функция, позволяющая получить методы сервиса
  * 
- * Также как и в предыдущем примере, она также будет работать и без встраивания в
- * компонент в секцию `methods`, но если вы хотите их использовать в `template`,
- * то без встраивания не обойтись
+ * Также как и в предыдущем примере, она также будет работать и без встраивания
+ * 
+ * Но если вы хотите их использовать в `template`, то без встраивания не обойтись
+ * 
+ * Единственный нюанс, методы надо встраивать тоже в секцию `data`, иначе при
+ * уничтожении экземпляра и создании нового связь теряется
+ * 
+ * Практикой было установлено, что `data` пересоздается после unmount компонента,
+ * а вот методы нет, и они продолжают указывать на старый экземпляр
  * 
  * @param {string | MethodsNames} keyOrMethodsNames - ключ ИЛИ методы, которые вы хотите получить
  * @param {MethodsNames} [methodsNames] - если передали ключ, то вторым параметром передаем методы
  * @returns { {[MethodName]: Function} }
  * 
  * @example
- * methods: {
- *  ...calculatorMethods(['calculateResult']),
- *  ...calculatorMethods('key', { newCalc: 'calculateResult' })
+ * data() {
+ *  return {
+ *    ...calculatorMethods(['calculateResult']),
+ *    ...calculatorMethods('key', { newCalc: 'calculateResult' })
+ *  };
  * },
  */
 const calculatorMethods = (keyOrMethodsNames, methodsNames) => {
@@ -392,4 +400,22 @@ const calculatorMethods = (keyOrMethodsNames, methodsNames) => {
   return res;
 };
 
-export { calculatorData, calculatorMethods };
+/**
+ * Уничтожить экземпляр
+ * 
+ * @param {string[]} [keys] - ключи экземпляров, которые нужно удалить, если ничего не будет передано
+ * будет удален базовый экземпляр
+ * 
+ * При новом запросе, будет создан свежий экземпляр
+ */
+const destroyCalculator = (...keys) => {
+  if (keys.length > 0) {
+    for (const key of keys) {
+      delete Calculator.scopedInstances[key];
+    }
+  } else {
+    Calculator.instance = undefined;
+  }
+}
+
+export { calculatorData, calculatorMethods, destroyCalculator };

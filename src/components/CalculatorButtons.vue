@@ -21,10 +21,10 @@ export default {
   data() {
     return {
       ...calculatorData(['symbols']),
+      ...calculatorMethods(['addSymbolToOperation', 'addSymbolToButtons', 'setNewSymbols']),
     }
   },
   methods: {
-    ...calculatorMethods(['addSymbolToOperation', 'addSymbolToButtons', 'setNewSymbols']),
     addSymbol() {
       this.symbols.push('*');
     }

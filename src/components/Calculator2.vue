@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { calculatorData, calculatorMethods } from '../services/Calculator';
+import { calculatorData, calculatorMethods, destroyCalculator } from '../services/Calculator';
 
 export const KEY = 'test_instance';
 
@@ -20,16 +20,19 @@ export default {
       ...calculatorData(KEY, {
         input: 'operation',
       }),
+      ...calculatorMethods(KEY, {
+        write: 'addSymbolToOperation',
+        calc: 'calculateResult',
+      }),
     };
   },
+  destroyed() {
+    destroyCalculator(KEY);
+  },
   methods: {
-    ...calculatorMethods(KEY, {
-      write: 'addSymbolToOperation',
-      calc: 'calculateResult',
-    }),
     setOperation() {
-      this.write('5+6');
-    }
+      this.write('5+6', this.input);
+    },
   }
 }
 </script>

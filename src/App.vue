@@ -3,8 +3,11 @@
     <calculator-input />
     <calculator-buttons />
     <calculator-result /><br /><br />
-    <calculator-2 />
-    <calculator-2-result />
+    <template v-if="showCalculator2">
+      <calculator-2 />
+      <calculator-2-result />
+    </template>
+    <button @click="toggleCalculator2">Hide and destroy Calculator 2 / Show</button>
   </div>
 </template>
 
@@ -23,6 +26,16 @@ export default {
     CalculatorResult,
     Calculator2,
     Calculator2Result,
+  },
+  data() {
+    return {
+      showCalculator2: true,
+    };
+  },
+  methods: {
+    toggleCalculator2() {
+      this.showCalculator2 = !this.showCalculator2;
+    }
   }
 }
 </script>
