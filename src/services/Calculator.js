@@ -1,4 +1,5 @@
-import ServiceDi, { getInstanceFactory } from '@/lib/ServiceDi';
+import ServiceDi, { getInstanceFactory, destroyFactory } from '@/lib/ServiceDi';
+import { dataFactory, methodsFactory } from '@/lib/serviceInComponent';
 
 class Calculator extends ServiceDi {
   /**
@@ -94,7 +95,6 @@ class Calculator extends ServiceDi {
     }
 
     this._operation.value += s;
-    console.log(this._resultCounter.value);
   }
 
   calculateResult() {
@@ -229,86 +229,14 @@ class Calculator extends ServiceDi {
  */
 const getInstance = getInstanceFactory(Calculator);
 
-/**
- * Константа, в которую мы зашиваем доступные данные для чтения
- * (и записи, если вы делаете публичное свойство без алиаса)
- * 
- * Позволяет ограничить свойства, не давая читать любые данные
- * 
- * Подобные константы опциональны, если вам не нужно ограничивать чтение
- * свойств и методов, можете просто не добавлять такие проверки
- */
 const PUBLIC_PROPERTY_NAMES = [
   'operation',
   'resultCounter',
   'symbols',
   'symbolsWithOperation',
 ];
-/**
- * @typedef {string} NewPropName
- */
-/**
- * @typedef {string} PropName
- */
-/**
- * @typedef {{[NewPropName]: PropName}} PropNamesWithAliases
- */
-/**
- * @typedef {PropName[] | PropNamesWithAliases} PropNames
- */
-/**
- * Специальная функция, позволяющая записать данные для чтения
- * в блок `data` в компоненте
- * 
- * На самом деле его необязательно записывать в `data`, сама переменная
- * в любом случае будет в актуальном состоянии, но чтобы воспользоваться
- * ей в секции `template` или использовать другую функциональность (e.g watchers/computed)
- * ее нужно встраивать в секцию `data`
- * 
- * @param {string | PropNames} keyOrPropNames - ключ ИЛИ свойства, которые вы хотите получите
- * @param {PropNames} [propNames] - если передается ключ, то вторым параметром передаем свойства
- * @returns { {[PropName]: any} } - отдает объект со всеми запрашиваемыми свойствами
- * 
- * @example
- * data() {
- *  return {
- *    ...calculatorData(['operation']),
- *    ...calculatorData('someKey', { newOp: 'operation' })
- *  };
- * }
- */
-const calculatorData = (keyOrPropNames, propNames) => {
-  let instance = null;
+const calculatorData = dataFactory(getInstance, PUBLIC_PROPERTY_NAMES);
 
-  if (typeof keyOrPropNames === 'string') {
-    instance = getInstance(keyOrPropNames);
-  } else {
-    propNames = keyOrPropNames;
-    instance = getInstance();
-  }
-
-  if (!Array.isArray(propNames)) {
-    propNames = Object.entries(propNames);
-  }
-
-  const res = { };
-  
-  for (const prop of propNames) {
-    let propAlias = prop instanceof Array ? prop[0] : prop;
-    let propName = prop instanceof Array ? prop[1] : prop;
-    
-    // Если не нужна проверка доступных свойств, этот `if` не нужен
-    if (PUBLIC_PROPERTY_NAMES.includes(propName)) {
-      res[propAlias] = instance[propName];
-    }
-  }
-
-  return res;
-};
-
-/**
- * Такого же типа константа, только определяющая список доступных методов
- */
 const PUBLIC_METHODS_NAMES = [
   'addSymbolToOperation',
   'calculateResult',
@@ -316,86 +244,14 @@ const PUBLIC_METHODS_NAMES = [
   'setNewSymbols',
 ];
 /**
- * @typedef {string} NewMethodName
- */
-/**
- * @typedef {string} MethodName
- */
-/**
- * @typedef {{[NewMethodName]: MethodName}} MethodsNamesWithAliases
- */
-/**
- * @typedef {MethodName[] | MethodsNamesWithAliases} MethodsNames
- */
-/**
- * Специальная функция, позволяющая получить методы сервиса
- * 
- * Также как и в предыдущем примере, она также будет работать и без встраивания
- * 
- * Но если вы хотите их использовать в `template`, то без встраивания не обойтись
- * 
- * Единственный нюанс, методы надо встраивать тоже в секцию `data`, иначе при
+ * Методы надо встраивать тоже в секцию `data`, иначе при
  * уничтожении экземпляра и создании нового связь теряется
  * 
  * Практикой было установлено, что `data` пересоздается после unmount компонента,
  * а вот методы нет, и они продолжают указывать на старый экземпляр
- * 
- * @param {string | MethodsNames} keyOrMethodsNames - ключ ИЛИ методы, которые вы хотите получить
- * @param {MethodsNames} [methodsNames] - если передали ключ, то вторым параметром передаем методы
- * @returns { {[MethodName]: Function} }
- * 
- * @example
- * data() {
- *  return {
- *    ...calculatorMethods(['calculateResult']),
- *    ...calculatorMethods('key', { newCalc: 'calculateResult' })
- *  };
- * },
  */
-const calculatorMethods = (keyOrMethodsNames, methodsNames) => {
-  let instance = null;
+const calculatorMethods = methodsFactory(getInstance, PUBLIC_METHODS_NAMES);
 
-  if (typeof keyOrMethodsNames === 'string') {
-    instance = getInstance(keyOrMethodsNames);
-  } else {
-    methodsNames = keyOrMethodsNames;
-    instance = getInstance();
-  }
-
-  if (!Array.isArray(methodsNames)) {
-    methodsNames = Object.entries(methodsNames);
-  }
-
-  const res = { };
-
-  for (const method of methodsNames) {
-    let methodAlias = method instanceof Array ? method[0] : method;
-    let methodName = method instanceof Array ? method[1] : method;
-
-    if (PUBLIC_METHODS_NAMES.includes(methodName)) {
-      res[methodAlias] = instance[methodName].bind(instance);
-    }
-  }
-  
-  return res;
-};
-
-/**
- * Уничтожить экземпляр
- * 
- * @param {string[]} [keys] - ключи экземпляров, которые нужно удалить, если ничего не будет передано
- * будет удален базовый экземпляр
- * 
- * При новом запросе, будет создан свежий экземпляр
- */
-const destroyCalculator = (...keys) => {
-  if (keys.length > 0) {
-    for (const key of keys) {
-      delete Calculator.scopedInstances[key];
-    }
-  } else {
-    Calculator.instance = undefined;
-  }
-}
+const destroyCalculator = destroyFactory(Calculator);
 
 export { calculatorData, calculatorMethods, destroyCalculator };
