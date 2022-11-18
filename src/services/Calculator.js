@@ -1,17 +1,6 @@
-class Calculator {
-  /**
-   * Общий инстанс класса, для сохранения экземпляра между компонентами
-   * 
-   * @type {Calculator}
-   */
-  static instance = null;
-  /**
-   * Закрытый инстанс класса, который можно получить по ключу
-   * 
-   * @type {[key]: Calculator}
-   */
-  static scopedInstances = {};
+import ServiceDi, { getInstanceFactory } from '@/lib/ServiceDi';
 
+class Calculator extends ServiceDi {
   /**
    * Приватное свойство
    * Не подразумевается, что его нужно будет читать извне
@@ -238,21 +227,7 @@ class Calculator {
  * Это простенький DI, позволяющий получать один и тот же экземпляр,
  * но при этом создавать его только тогда, когда он действительно нужен
  */
-const getInstance = (key = '') => {
-  if (key) {
-    if (!Calculator.scopedInstances[key]) {
-      Calculator.scopedInstances[key] = new Calculator();
-    }
-
-    return Calculator.scopedInstances[key];
-  }
-
-  if (!Calculator.instance) {
-    Calculator.instance = new Calculator();
-  }
-
-  return Calculator.instance;
-};
+const getInstance = getInstanceFactory(Calculator);
 
 /**
  * Константа, в которую мы зашиваем доступные данные для чтения
