@@ -4,14 +4,17 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
   },
   "dependencies": {
     "vue": "^2.6.14"
   },
   "devDependencies": {
     "@vue/cli-service": "~5.0.0",
-    "vue-template-compiler": "^2.6.14"
+    "vue-template-compiler": "^2.6.14",
+    "vuepress": "^1.9.7"
   },
   "browserslist": [
     "> 1%",
