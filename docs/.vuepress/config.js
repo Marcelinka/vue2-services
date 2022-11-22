@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   title: 'Vue 2 Services',
   description: 'Интеграция классов с Vue 2',
@@ -22,8 +24,21 @@ module.exports = {
               '/class/object/static-fields',
             ],
           },
+          {
+            title: 'Примитив',
+            children: [
+              '/class/primitive/property',
+            ],
+          },
         ]
       },
     ]
+  },
+  configureWebpack: {
+    resolve: {
+      alias: {
+        '@example-services': path.resolve(__dirname, '../../src/services/examples'),
+      }
+    }
   }
 }
