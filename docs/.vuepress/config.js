@@ -22,6 +22,7 @@ module.exports = {
             title: 'Объект',
             children: [
               '/class/object/static-fields',
+              '/class/object/new-field'
             ],
           },
           {
