@@ -1,7 +1,7 @@
-import ServiceDi, { getInstanceFactory, destroyFactory } from '@/lib/ServiceDi';
+import ServiceMultitone, { getInstanceFactory, destroyFactory } from '@/lib/ServiceMultitone';
 import { dataFactory, methodsFactory } from '@/lib/serviceInComponent';
 
-class Calculator extends ServiceDi {
+class Calculator extends ServiceMultitone {
   /**
    * Приватное свойство
    * Не подразумевается, что его нужно будет читать извне
@@ -224,7 +224,7 @@ class Calculator extends ServiceDi {
 };
 
 /**
- * Это простенький DI, позволяющий получать один и тот же экземпляр,
+ * Это Multitone, позволяющий получать один и тот же экземпляр,
  * но при этом создавать его только тогда, когда он действительно нужен
  */
 const getInstance = getInstanceFactory(Calculator);

@@ -4,9 +4,9 @@
  * Добавляет сервисные поля для хранения экземпляров класса
  * 
  * @example
- * class SomeService extends ServiceDi { }
+ * class SomeService extends ServiceMultitone { }
  */
-export default class ServiceDI {
+export default class ServiceMultitone {
   /**
    * @static
    * @public
@@ -24,7 +24,7 @@ export default class ServiceDI {
 
 /**
  * Фабрика для создания функции типа InstanceGetter для переданного класса
- * Использует поля из ServiceDI
+ * Использует поля из ServiceMultitone
  * 
  * @param {Function} Service - ваш класс
  * @returns {InstanceGetter}
@@ -52,7 +52,7 @@ export const getInstanceFactory = (Service) =>
 
 /**
  * Фабрика для создания функция уничтожении экземпляров
- * Использует поля из ServiceDI
+ * Использует поля из ServiceMultitone
  * 
  * @param {Function} Service - ваш класс
  * @returns {DestroyFunction}
