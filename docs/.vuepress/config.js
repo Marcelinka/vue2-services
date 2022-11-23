@@ -29,6 +29,7 @@ module.exports = {
             children: [
               '/class/primitive/property',
               '/class/primitive/private',
+              '/class/primitive/validated'
             ],
           },
         ]
