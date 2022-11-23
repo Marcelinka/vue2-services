@@ -28,6 +28,7 @@ module.exports = {
             title: 'Примитив',
             children: [
               '/class/primitive/property',
+              '/class/primitive/private',
             ],
           },
         ]
