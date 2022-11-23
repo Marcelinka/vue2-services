@@ -12,6 +12,8 @@ Vue.set(<object_link>, '<prop_name>', <prop_value>)
 this.someObject.someAddedProp = 'new value';
 ```
 
+Для удаления поля я не нашла способа без изменения ссылки во Vue, соответственно и в классе придется пользоваться перезаписыванием.
+
 ### Класс
 
 <<< @/src/services/examples/ObjectWithNewField.js{9}
