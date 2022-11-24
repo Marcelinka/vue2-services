@@ -23,7 +23,8 @@ module.exports = {
             children: [
               '/class/object/static-fields',
               '/class/object/new-field',
-              '/class/object/rewritable'
+              '/class/object/rewritable',
+              '/class/object/readonly'
             ],
           },
           {
