@@ -24,7 +24,8 @@ module.exports = {
               '/class/object/static-fields',
               '/class/object/new-field',
               '/class/object/rewritable',
-              '/class/object/readonly'
+              '/class/object/readonly',
+              '/class/object/validated'
             ],
           },
           {
