@@ -1,19 +1,26 @@
 # vue2-services
 
-## Project setup
-```
+Проект, показывающий реальные возможности классов при работе с Vue 2.
+
+Перед работой, установите зависимости
+
+```bash
 yarn install
 ```
 
-### Compiles and hot-reloads for development
-```
+Чтобы увидеть **большой полноценный пример**, запустите проект через
+
+```bash
 yarn serve
 ```
 
-### Compiles and minifies for production
-```
-yarn build
+Тогда вы сможете посмотреть в работе класс Calculator (`src/services/Calculator.js`).
+
+Чтобы увидеть документацию, где каждая особенность будет подробно рассмотрена на отдельной странице, запустите команду
+
+```bash
+yarn docs:dev
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Оба варианта запускаются на порту `8081`: http://localhost:8081/
+
