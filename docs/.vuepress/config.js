@@ -1,6 +1,7 @@
 const path = require('path');
 
 module.exports = {
+  base: '/vue2-services/',
   title: 'Vue 2 Services',
   description: 'Интеграция классов с Vue 2',
   themeConfig: {
