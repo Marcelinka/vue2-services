@@ -20,6 +20,14 @@ module.exports = {
         collapsable: false,
         children: [
           {
+            title: 'Примитив',
+            children: [
+              '/class/primitive/property',
+              '/class/primitive/private',
+              '/class/primitive/validated'
+            ],
+          },
+          {
             title: 'Объект',
             children: [
               '/class/object/static-fields',
@@ -30,13 +38,11 @@ module.exports = {
             ],
           },
           {
-            title: 'Примитив',
+            title: 'Массив',
             children: [
-              '/class/primitive/property',
-              '/class/primitive/private',
-              '/class/primitive/validated'
-            ],
-          },
+              '/class/array/static'
+            ]
+          }
         ]
       },
     ]

@@ -3,7 +3,7 @@ home: true
 heroText: Vue 2 Services
 tagline: Использование классов с Vue 2
 actionText: К примерам →
-actionLink: /class/object/static-fields
+actionLink: /class/primitive/property
 features:
 - title: Реактивность
   details: Реактивные свойства и методы в классе
