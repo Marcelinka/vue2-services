@@ -40,7 +40,8 @@ module.exports = {
           {
             title: 'Массив',
             children: [
-              '/class/array/static'
+              '/class/array/static',
+              '/class/array/element-change'
             ]
           }
         ]
