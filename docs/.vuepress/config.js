@@ -41,7 +41,8 @@ module.exports = {
             title: 'Массив',
             children: [
               '/class/array/static',
-              '/class/array/element-change'
+              '/class/array/element-change',
+              '/class/array/rewritable'
             ]
           }
         ]
