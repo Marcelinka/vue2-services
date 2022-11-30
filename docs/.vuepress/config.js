@@ -42,7 +42,8 @@ module.exports = {
             children: [
               '/class/array/static',
               '/class/array/element-change',
-              '/class/array/rewritable'
+              '/class/array/rewritable',
+              '/class/array/with-objects',
             ]
           }
         ]
