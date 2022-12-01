@@ -44,6 +44,7 @@ module.exports = {
               '/class/array/element-change',
               '/class/array/rewritable',
               '/class/array/with-objects',
+              '/class/array/readonly',
             ]
           }
         ]
