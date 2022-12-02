@@ -47,6 +47,12 @@ module.exports = {
               '/class/array/readonly',
               '/class/array/validated',
             ]
+          },
+          {
+            title: 'Геттеры',
+            children: [
+              '/class/getters/primitive-prop'
+            ]
           }
         ]
       },
