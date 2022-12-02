@@ -45,6 +45,7 @@ module.exports = {
               '/class/array/rewritable',
               '/class/array/with-objects',
               '/class/array/readonly',
+              '/class/array/validated',
             ]
           }
         ]
