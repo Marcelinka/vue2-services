@@ -51,7 +51,8 @@ module.exports = {
           {
             title: 'Геттеры',
             children: [
-              '/class/getters/primitive-prop'
+              '/class/getters/primitive-prop',
+              '/class/getters/object-prop',
             ]
           }
         ]
