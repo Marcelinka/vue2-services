@@ -53,6 +53,7 @@ module.exports = {
             children: [
               '/class/getters/primitive-prop',
               '/class/getters/object-prop',
+              '/class/getters/multiple-props'
             ]
           }
         ]
